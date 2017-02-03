@@ -42,20 +42,6 @@ var FACTS = [
     "The Moon is moving approximately 3.8 cm away from our planet every year."
 ];
 
-const PLANETS = ['Mercury',
-  'Venus',
-  'Mars',
-  'Earth',
-  'Saturn'
-]
-
-const PLANET_JOKES = {'Mercury':[0,1],
-  'Venus':[1,2],
-  'Mars':[3],
-  'Earth':[3,4],
-  'Saturn':[10],
-}
-
 /**
  * The AlexaSkill prototype and helper functions
  */
@@ -98,29 +84,12 @@ Fact.prototype.intentHandlers = {
         handleNewFactRequest(response);
     },
 
-    "SupportedPlanetsIntent": function (intent, session, response) {
-        handleSupportedPlanetsRequest(intent, session, response);
-    },
-
-    "FactAboutPlanet": (intent, session, response) => {
-      handleFactAboutPlanet(intent, session, response);
-    },
-
-    "DialogFactAboutPlanet": (intent, session, response) => {
-        var planet = intent.slots.planet;
-        if (planet && planet.value) {
-            handlePlanetDialogRequest(intent, session, response);
-        } else {
-            handleNoSlotDialogRequest(intent, session, response);
-        }
-    },
-
     "AMAZON.HelpIntent": function (intent, session, response) {
         response.ask("You can say tell me a space fact, or, you can say exit... What can I help you with?", "What can I help you with?");
     },
 
     "AMAZON.StopIntent": function (intent, session, response) {
-        var speechOutput = "To infinity amd beyond.";
+        var speechOutput = "Goodbye";
         response.tell(speechOutput);
     },
 
@@ -142,101 +111,6 @@ function handleNewFactRequest(response) {
     var speechOutput = "Here's your fact: " + randomFact;
     var cardTitle = "Your Fact";
     response.tellWithCard(speechOutput, cardTitle, speechOutput);
-}
-
-function handleSupportedPlanetsRequest(response) {
-    // Create speech output
-    var speechOutput = "I know Facts about the planets : " + PLANETS.join(', ');
-    var cardTitle = "Planets";
-    response.tellWithCard(speechOutput, cardTitle, speechOutput);
-}
-
-const handleNoSlotDialogRequest = (intent, session, response)  => {
-    if (!session.attributes.planet) {
-        // get date re-prompt
-        var repromptText = "Which planet would you like to hear a Fact about?";
-         repromptText += "I know Facts about the planets : " + PLANETS.join(', ');
-        var speechOutput = repromptText;
-
-        response.ask(speechOutput, repromptText);
-    } else {
-      var speechOutput = "Why am I hear?";
-      var cardTitle = "You fucked up";
-      response.tellWithCard(speechOutput, cardTitle, speechOutput);
-    }
-}
-
-const handlePlanetDialogRequest = (intent, session, response) => {
-    var planet = getPlanetFromIntent(intent, false),
-        repromptText,
-        speechOutput;
-    if (planet.error) {
-        repromptText = "Currently, I know jopkes about: " + PLANETS.join(', ')
-            + "Which planet would you like?";
-        // if we received a value for the incorrect city, repeat it to the user, otherwise we received an empty slot
-        speechOutput = planet.planet ? "I'm sorry, I don't know any Facts for " + planet.planet + ". " + repromptText : repromptText;
-        response.ask(speechOutput, repromptText);
-        return;
-    }
-
-    // if we don't have a date yet, go to date. If we have a date, we perform the final request
-    if (session.attributes.planet) {
-        getFinalPlanetFactResponse(planet, response);
-    } else {
-        // set city in session and prompt for date
-        session.attributes.city = cityStation;
-        speechOutput = "fuck.";
-        repromptText = "Why?";
-
-        response.ask(speechOutput, repromptText);
-    }
-}
-
-function getCityStationFromIntent(intent, assignDefault) {
-
-    var citySlot = intent.slots.City;
-    // slots can be missing, or slots can be provided but with empty value.
-    // must test for both.
-    if (!citySlot || !citySlot.value) {
-        if (!assignDefault) {
-            return {
-                error: true
-            }
-        } else {
-            // For sample skill, default to Seattle.
-            return {
-                city: 'seattle',
-                station: STATIONS.seattle
-            }
-        }
-    } else {
-        // lookup the city. Sample skill uses well known mapping of a few known cities to station id.
-        var cityName = citySlot.value;
-        if (STATIONS[cityName.toLowerCase()]) {
-            return {
-                city: cityName,
-                station: STATIONS[cityName.toLowerCase()]
-            }
-        } else {
-            return {
-                error: true,
-                city: cityName
-            }
-        }
-    }
-}
-
-
-function getFinalPlanetFactResponse(planet, response) {
-     let jokes = PLANET_JOKES[planet]
-
-     var factIndex = Math.floor(Math.random() * PLANET_JOKES[planet].length);
-     var randomFact = PLANET_JOKES[planet][factIndex];
-
-     // Create speech output
-     var speechOutput = `Here's your fact about ${planet}: ` + randomFact
-     var cardTitle = `Your Fact About ${planet}`;
-     response.tellWithCard(speechOutput, cardTitle, speechOutput);
 }
 
 // Create the handler that responds to the Alexa Request.
