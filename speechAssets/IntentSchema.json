@@ -1,0 +1,28 @@
+{
+  "intents": [
+    {
+      "intent": "GetNewFactIntent"
+    },
+    {
+      "intent": "SupportedPlanetsIntent"
+    },
+    {
+      "intent": "DialogFactAboutPlanet",
+      "slots": [
+        {
+          "name": "Planet",
+          "type": "PLANET"
+        }
+      ]
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
+      "intent": "AMAZON.CancelIntent"
+    }
+  ]
+ }
