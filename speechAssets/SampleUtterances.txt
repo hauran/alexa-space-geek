@@ -14,12 +14,13 @@ GetNewFactIntent tell me something
 GetNewFactIntent give me something
 
 SupportedPlanetsIntent what planets
+SupportedPlanetsIntent which planets
 SupportedPlanetsIntent what planets are supported
 SupportedPlanetsIntent which planets are supported
-SupportedPlanetsIntent which planets
 SupportedPlanetsIntent which planets do you know
+SupportedPlanetsIntent what planets do you know
 
-DialogFactAboutPlanet tell me a Fact about {planet}
-DialogFactAboutPlanet tell me a Fact about planet {planet}
-DialogFactAboutPlanet tell me a Fact about the planet {planet}
-DialogFactAboutPlanet whats a Fact about {planet}
+OneShotFactAboutPlanet tell me a fact about {Planet}
+OneShotFactAboutPlanet tell me a fact about planet {Planet}
+OneShotFactAboutPlanet tell me a fact about the planet {Planet}
+OneShotFactAboutPlanet whats a fact about {Planet}

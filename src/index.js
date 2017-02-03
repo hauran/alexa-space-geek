@@ -42,6 +42,21 @@ var FACTS = [
     "The Moon is moving approximately 3.8 cm away from our planet every year."
 ];
 
+const PLANETS = ['Mercury',
+  'Venus',
+  'Mars',
+  'Earth',
+  'Saturn'
+]
+
+const PLANET_JOKES = {
+  'mercury':[0,1],
+  'venus':[1,2],
+  'mars':[3],
+  'earth':[3,4],
+  'saturn':[10]
+}
+
 /**
  * The AlexaSkill prototype and helper functions
  */
@@ -84,6 +99,14 @@ Fact.prototype.intentHandlers = {
         handleNewFactRequest(response);
     },
 
+    "SupportedPlanetsIntent": function (intent, session, response) {
+        handleSupportedPlanetsRequest(response);
+    },
+
+    "OneShotFactAboutPlanet": (intent, session, response) => {
+        handleOneShotFactAboutPlanet(intent, session, response);
+    },
+
     "AMAZON.HelpIntent": function (intent, session, response) {
         response.ask("You can say tell me a space fact, or, you can say exit... What can I help you with?", "What can I help you with?");
     },
@@ -99,6 +122,66 @@ Fact.prototype.intentHandlers = {
     }
 };
 
+// function handleNoSlotDialogRequest (intent, session, response)  {
+//     if (!session.attributes.planet) {
+//         // get date re-prompt
+//         var repromptText = "Which planet would you like to hear a Fact about?";
+//         var speechOutput = repromptText;
+//
+//         response.ask(speechOutput, repromptText);
+//     } else {
+//       var speechOutput = "Why am I hear?";
+//       var cardTitle = "You fucked up";
+//       response.tellWithCard(speechOutput, cardTitle, speechOutput);
+//     }
+// }
+
+
+
+function handleOneShotFactAboutPlanet (intent, session, response) {
+  var planet = intent.slots.Planet;
+
+  // var speechOutput = "Your user ID is: " + session.user.userId + ".  ";
+  var speechOutput = "Here is your fact about " + planet.value + ".  ";
+  speechOutput += FACTS[PLANET_JOKES[planet.value.toLowerCase()][0]];
+
+  var cardTitle = "Your fact about " + planet.value;
+  response.tellWithCard(speechOutput, cardTitle, speechOutput);
+}
+
+//
+// function getPlanetFromIntent(intent, assignDefault) {
+//     var planetSlot = intent.slots.Planet;
+//     // slots can be missing, or slots can be provided but with empty value.
+//     // must test for both.
+//     if (!planetSlot || !planetSlot.value) {
+//         if (!assignDefault) {
+//             return {
+//                 error: true
+//             }
+//         } else {
+//             // For sample skill, default to Seattle.
+//             return {
+//                 planet: 'Earth'
+//             }
+//         }
+//     } else {
+//         // lookup the city. Sample skill uses well known mapping of a few known cities to station id.
+//         var planetName = planetSlot.value;
+//         if (planetName) {
+//             return {
+//                 planet: planetName
+//             }
+//         } else {
+//             return {
+//                 error: true,
+//                 planet: planetName
+//             }
+//         }
+//     }
+// }
+
+
 /**
  * Gets a random new fact from the list and returns to the user.
  */
@@ -110,6 +193,14 @@ function handleNewFactRequest(response) {
     // Create speech output
     var speechOutput = "Here's your fact: " + randomFact;
     var cardTitle = "Your Fact";
+    response.tellWithCard(speechOutput, cardTitle, speechOutput);
+}
+
+
+function handleSupportedPlanetsRequest(response) {
+    // Create speech output
+    var speechOutput = "I know facts about the planets " + PLANETS.join(', ');
+    var cardTitle = "The Planets";
     response.tellWithCard(speechOutput, cardTitle, speechOutput);
 }
 
